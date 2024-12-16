@@ -10,7 +10,6 @@ import {
   IonLabel,
   IonItem,
   IonText,
-  IonImg,
 } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 import users from "../users.json";
@@ -29,7 +28,9 @@ const Login: React.FC = () => {
 
   // Validación de credenciales
   const validateCredentials = (email: string, password: string): boolean => {
-    const user = users.find((u) => u.email === email && u.password === password);
+    const user = users.find(
+      (u) => u.email === email && u.password === password
+    );
     if (user) {
       setUserName(user.name); // Guarda el nombre del usuario si las credenciales son correctas
       return true;
@@ -56,7 +57,9 @@ const Login: React.FC = () => {
   useEffect(() => {
     if (isLoggedIn && redirectTimer !== null) {
       const interval = setInterval(() => {
-        setRedirectTimer((prev) => (prev !== null && prev > 0 ? prev - 1 : null));
+        setRedirectTimer((prev) =>
+          prev !== null && prev > 0 ? prev - 1 : null
+        );
       }, 1000);
 
       if (redirectTimer === 0) {
@@ -71,14 +74,16 @@ const Login: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Login</IonTitle>
+          <IonTitle>Ingresa a tu Cuenta</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">
+      {/* Contenedor principal para centrar el contenido */}
+      <IonContent className="LoginContent">
         {!isLoggedIn ? (
           <>
-            <IonItem>
-              <IonLabel position="stacked"style={{fontSize:"40px",paddingBottom:"20px"}}>Email</IonLabel>
+            {/* Bloque de ingreso de email */}
+            <IonItem className="LoginItem">
+              <IonLabel position="stacked">Email</IonLabel>
               <IonInput
                 type="email"
                 value={email}
@@ -87,12 +92,13 @@ const Login: React.FC = () => {
                   setError("");
                 }}
                 placeholder="Ingresa tu Correo"
-                className="emailLogin"
                 clearInput
               />
             </IonItem>
-            <IonItem>
-              <IonLabel position="stacked"style={{fontSize:"40px", paddingBottom:"20px" }}>Password</IonLabel>
+
+            {/* Bloque de ingreso de contraseña */}
+            <IonItem className="LoginItem">
+              <IonLabel position="stacked">Password</IonLabel>
               <IonInput
                 type="password"
                 value={password}
@@ -101,33 +107,36 @@ const Login: React.FC = () => {
                   setError("");
                 }}
                 placeholder="Ingresa tu Contraseña"
-                className="passLogin"
                 clearInput
               />
             </IonItem>
-            <IonButton expand="block" onClick={handleLogin}>
+
+            {/* Botón de login */}
+            <IonButton
+              className="ButtonLogin"
+              onClick={handleLogin}
+              expand="block"
+            >
               Login
             </IonButton>
+
+            {/* Mensaje de error */}
             {error && (
-              <IonText color="danger">
+              <IonText color="danger" className="IonText">
                 <p>{error}</p>
                 <ErrorLogin />
-
               </IonText>
             )}
           </>
         ) : (
           <>
-            <IonText color="success"
-                      style={{
-                        textAlign: "center",
-                      }}>
+            {/* Mensaje de bienvenida y redirección */}
+            <IonText color="success">
               <h2>Bienvenido, {userName}!</h2>
               {redirectTimer !== null && (
-                <p>Redirigiendo {redirectTimer} second(s)...</p>
-      
+                <p>Redirigiendo en {redirectTimer} segundos...</p>
               )}
-              <ImgLoading/>
+              <ImgLoading />
             </IonText>
           </>
         )}
