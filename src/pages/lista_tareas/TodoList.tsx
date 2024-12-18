@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import * as React from "react";
+import { useState, useEffect } from "react";
 import BannerPokemon from "../../components/banner/bannerPokemon";
 import {
   IonToast,
@@ -30,7 +31,6 @@ import {
   thumbsUp,
   closeCircleOutline,
 } from "ionicons/icons";
-import "./TodoList.css";
 
 import Peripherals from "../../components/peripherals/camera/Peripherals";
 

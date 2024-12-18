@@ -1,6 +1,5 @@
-import React from 'react';
-import { IonImg } from '@ionic/react';
-
+import * as React from "react";
+import { IonImg } from "@ionic/react";
 
 const ImgLoading: React.FunctionComponent = () => {
   return (
@@ -15,6 +14,6 @@ const ImgLoading: React.FunctionComponent = () => {
       }}
     />
   );
-}
+};
 
 export default ImgLoading;

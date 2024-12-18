@@ -1,21 +1,27 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "useDefineForClassFields": true,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "allowJs": false,
-    "skipLibCheck": true,
-    "esModuleInterop": false,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "module": "ESNext",
-    "moduleResolution": "Node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx"
+    "target": "ESNext", // Soporta las últimas características de JavaScript
+    "useDefineForClassFields": true, // Define campos en clases (útil para React)
+    "lib": ["DOM", "DOM.Iterable", "ESNext"], // Librerías incluidas
+    "allowJs": false, // No permite JavaScript, solo TypeScript
+    "skipLibCheck": true, // Evita verificar tipos de dependencias externas
+    "esModuleInterop": true, // Permite imports más fluidos con módulos CommonJS
+    "allowSyntheticDefaultImports": true, // Facilita importaciones predeterminadas
+    "strict": true, // Habilita todas las verificaciones estrictas
+    "forceConsistentCasingInFileNames": true, // Previene errores por mayúsculas/minúsculas
+    "module": "ESNext", // Sistema de módulos para aplicaciones modernas
+    "moduleResolution": "Node", // Resolución de módulos tipo Node.js
+    "resolveJsonModule": true, // Permite importar archivos JSON
+    "isolatedModules": true, // Asegura compilación independiente
+    "noEmit": true, // No genera archivos de salida
+    "jsx": "react-jsx", // Configura JSX para React
+    "baseUrl": "./", // Directorio base para imports absolutos
+    "paths": {
+      // Facilita imports desde src
+      "@/*": ["src/*"]
+    }
   },
-  "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["src"], // Incluye solo archivos en la carpeta src
+  "exclude": ["node_modules", "dist"], // Excluye dependencias y la salida de compilación
+  "references": [{ "path": "./tsconfig.node.json" }] // Referencia a configuración adicional
 }

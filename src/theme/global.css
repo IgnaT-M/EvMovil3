@@ -1,0 +1,15 @@
+/* Estilos para Modo Claro */
+body.light-mode {
+  background-color: #f8f8f8 !important; /* Blanco opaco */
+  color: #3f51b5 !important; /* Texto índigo */
+  margin: 0;
+  height: 100vh;
+}
+
+/* Estilos para Modo Oscuro */
+body.dark-mode {
+  background-color: #000000 !important; /* Negro */
+  color: #f8f8f8 !important;
+  margin: 0;
+  height: 100vh;
+}
