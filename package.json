@@ -24,6 +24,7 @@
     "@emotion/styled": "^11.14.0",
     "@ionic/react": "^8.0.0",
     "@ionic/react-router": "^8.0.0",
+    "@mui/icons-material": "^6.2.1",
     "@mui/material": "^6.2.1",
     "@tcgdex/sdk": "^2.6.0-beta.3",
     "@types/react-router": "^5.1.20",

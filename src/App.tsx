@@ -13,7 +13,7 @@ import {
 } from "@ionic/react";
 import { BrowserRouter as IonReactRouter } from "react-router-dom";
 import { atCircle, square, triangle } from "ionicons/icons";
-import Tab1 from "./pages/lista_tareas/TodoList";
+import Tab1 from "./pages/lista_tareas/ListaDeTareas";
 import Tab2 from "./pages/login/Login";
 import Tab3 from "./components/peripherals/camera/Peripherals";
 import Tab4 from "./components/api/PokeApi";
