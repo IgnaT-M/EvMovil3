@@ -19,6 +19,7 @@ import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import Resgitrate from "../registrate/Resgitrate";
 import { Typography } from "@mui/material";
+import pokefondo from "../../assets/pokefondo.jpg";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -79,7 +80,8 @@ const Login: React.FC = () => {
       <IonContent className="LoginContent">
         <Box
           sx={{
-            backgroundImage: "url('/public/pokefondo.jpg')", // Ruta de la imagen de fondo
+            backgroundImage: "url('/pokefondo.jpg')",
+
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
