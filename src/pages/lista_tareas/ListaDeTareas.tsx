@@ -1,53 +1,29 @@
 import * as React from "react";
+import ToggleTareas from "../../components/peripherals/ToggleMas";
 import {
   IonToast,
   IonContent,
-  IonItem,
-  IonLabel,
-  IonList,
   IonPage,
   IonHeader,
   IonToolbar,
   IonTitle,
-  IonInput,
-  IonButton,
-  IonIcon,
-  IonCard,
-  IonCardContent,
-  IonGrid,
-  IonRow,
-  IonCol,
+  IonList,
 } from "@ionic/react";
 import {
-  trash,
-  addCircleOutline,
-  create,
-  checkmark,
-  flameSharp,
-  thumbsDown,
-  thumbsUp,
-  closeCircleOutline,
-} from "ionicons/icons";
-import Box from "@mui/material/Box";
-import Backdrop from "@mui/material/Backdrop";
-import SpeedDial from "@mui/material/SpeedDial";
-import SpeedDialIcon from "@mui/material/SpeedDialIcon";
-import SpeedDialAction from "@mui/material/SpeedDialAction";
-import FileCopyIcon from "@mui/icons-material/FileCopyOutlined";
-import SaveIcon from "@mui/icons-material/Save";
-import PrintIcon from "@mui/icons-material/Print";
-import ShareIcon from "@mui/icons-material/Share";
-import { Camera, CameraResultType } from "@capacitor/camera";
-import { Geolocation } from "@capacitor/geolocation";
-
-const actions = [
-  { icon: <FileCopyIcon />, name: "Copy" },
-  { icon: <SaveIcon />, name: "Save" },
-  { icon: <PrintIcon />, name: "Print" },
-  { icon: <ShareIcon />, name: "Share" },
-  { icon: <FileCopyIcon />, name: "Camera" },
-  { icon: <FileCopyIcon />, name: "Geolocation" },
-];
+  Box,
+  Button,
+  Card,
+  CardContent,
+  TextField,
+  Typography,
+  IconButton,
+} from "@mui/material";
+import {
+  Delete as DeleteIcon,
+  Add as AddIcon,
+  Edit as EditIcon,
+  Check as CheckIcon,
+} from "@mui/icons-material";
 
 const ListaDeTareas: React.FC = () => {
   const [items, setItems] = React.useState<
@@ -58,14 +34,15 @@ const ListaDeTareas: React.FC = () => {
   });
   const [name, setName] = React.useState("");
   const [description, setDescription] = React.useState("");
-  const [open, setOpen] = React.useState(false);
   const [showSuccessToast, setShowSuccessToast] = React.useState(false);
   const [showErrorToast, setShowErrorToast] = React.useState(false);
-  const [showUpdateToast, setShowUpdateToast] = React.useState(false);
   const [showDeleteToast, setShowDeleteToast] = React.useState(false);
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [photos, setPhotos] = React.useState<string[]>([]);
+  const [location, setLocation] = React.useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
 
   const addItem = () => {
     if (name.trim() && description.trim()) {
@@ -110,232 +87,175 @@ const ListaDeTareas: React.FC = () => {
           : item
       )
     );
-    setShowDeleteToast(true);
-  };
-
-  const openCamera = async () => {
-    const photo = await Camera.getPhoto({
-      resultType: CameraResultType.Uri,
-    });
-    console.log(photo);
-  };
-
-  const getCurrentPosition = async () => {
-    const coordinates = await Geolocation.getCurrentPosition();
-    console.log("Current position:", coordinates);
   };
 
   return (
-    <>
-      <IonPage>
-        <IonHeader>
-          <IonToolbar className="page-header">
-            <IonTitle
-              style={{
-                textAlign: "center",
-                width: "100%",
-                fontSize: "1.5rem",
-              }}
-            >
-              Mi Lista
-            </IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent className="ion-padding">
-          <IonToast
-            isOpen={showSuccessToast}
-            position="top"
-            onDidDismiss={() => setShowSuccessToast(false)}
-            message="¡Objeto agregado correctamente!"
-            duration={2000}
-            color="success"
-            icon={flameSharp}
-          />
-          <IonToast
-            isOpen={showErrorToast}
-            onDidDismiss={() => setShowErrorToast(false)}
-            message="Por favor, completa todos los campos."
-            duration={2000}
-            color="danger"
-            icon={thumbsDown}
-          />
-          <IonToast
-            isOpen={showUpdateToast}
-            onDidDismiss={() => setShowUpdateToast(false)}
-            message="Objeto actualizado correctamente."
-            duration={2000}
-            color="tertiary"
-            position="top"
-            icon={thumbsUp}
-          />
-          <IonToast
-            isOpen={showDeleteToast}
-            onDidDismiss={() => setShowDeleteToast(false)}
-            message="Objeto eliminado."
-            duration={2000}
-            color="warning"
-            position="top"
-            icon={closeCircleOutline}
-          />
+    <IonPage>
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle>Mi Lista</IonTitle>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent className="ion-padding">
+        <IonToast
+          isOpen={showSuccessToast}
+          message="¡Objeto agregado correctamente!"
+          duration={2000}
+          color="success"
+        />
+        <IonToast
+          isOpen={showErrorToast}
+          message="Por favor, completa todos los campos."
+          duration={2000}
+          color="danger"
+        />
+        <IonToast
+          isOpen={showDeleteToast}
+          message="Objeto eliminado."
+          duration={2000}
+          color="warning"
+        />
 
-          <IonCard>
-            <IonCardContent>
-              <IonGrid>
-                <IonRow>
-                  <IonCol size="12">
-                    <IonItem>
-                      <IonLabel
-                        position="floating"
-                        style={{ textAlign: "center", fontSize: "25px" }}
-                      >
-                        Nombre
-                      </IonLabel>
-                      <br />
-                      <IonInput
-                        value={name}
-                        onIonChange={(e) => setName(e.detail.value!)}
-                        placeholder="Agregar objeto"
-                        className="input-name"
-                      />
-                    </IonItem>
-                  </IonCol>
-                  <IonCol size="12">
-                    <IonItem>
-                      <IonLabel
-                        position="floating"
-                        style={{ textAlign: "center", fontSize: "25px" }}
-                      >
-                        Descripción
-                      </IonLabel>
-                      <br />
-                      <IonInput
-                        value={description}
-                        onIonChange={(e) => setDescription(e.detail.value!)}
-                        placeholder="Agregar descripción"
-                        className="input-description"
-                      />
-                    </IonItem>
-                  </IonCol>
-                  <IonCol size="12" className="ion-text-center">
-                    <IonButton
-                      style={{ marginTop: "20px" }}
-                      expand="block"
-                      onClick={addItem}
-                      className="add-button"
-                    >
-                      <IonIcon icon={addCircleOutline} slot="start" />
-                      Agregar objeto
-                    </IonButton>
-                  </IonCol>
-                </IonRow>
-              </IonGrid>
-            </IonCardContent>
-          </IonCard>
+        <Card sx={{ marginBottom: 2 }}>
+          <CardContent>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <TextField
+                label="Nombre"
+                variant="outlined"
+                fullWidth
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+              <TextField
+                label="Descripción"
+                variant="outlined"
+                fullWidth
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<AddIcon />}
+                fullWidth
+                onClick={addItem}
+              >
+                Agregar objeto
+              </Button>
+            </Box>
+          </CardContent>
+        </Card>
 
-          <IonList>
-            {items.map((item) => (
-              <IonCard key={item.id} className="card-item">
-                <IonCardContent className="card-content">
-                  <IonItem lines="none">
-                    {item.isEditing ? (
-                      <>
-                        <IonInput
-                          value={item.name}
-                          placeholder="Edit name"
-                          className="edit-input"
-                          onIonChange={(e) =>
-                            setItems(
-                              items.map((i) =>
-                                i.id === item.id
-                                  ? { ...i, name: e.detail.value! }
-                                  : i
-                              )
+        <IonList>
+          {items.map((item) => (
+            <Card key={item.id} sx={{ marginY: 1 }}>
+              <CardContent>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  {item.isEditing ? (
+                    <>
+                      <TextField
+                        variant="outlined"
+                        size="small"
+                        value={item.name}
+                        onChange={(e) =>
+                          setItems(
+                            items.map((i) =>
+                              i.id === item.id
+                                ? { ...i, name: e.target.value }
+                                : i
                             )
-                          }
-                        />
-                        <IonInput
-                          value={item.description}
-                          placeholder="Edit description"
-                          className="edit-input"
-                          onIonChange={(e) =>
-                            setItems(
-                              items.map((i) =>
-                                i.id === item.id
-                                  ? { ...i, description: e.detail.value! }
-                                  : i
-                              )
+                          )
+                        }
+                      />
+                      <TextField
+                        variant="outlined"
+                        size="small"
+                        value={item.description}
+                        onChange={(e) =>
+                          setItems(
+                            items.map((i) =>
+                              i.id === item.id
+                                ? { ...i, description: e.target.value }
+                                : i
                             )
-                          }
-                        />
-                        <IonButton
-                          color="success"
-                          fill="clear"
-                          onClick={() =>
-                            updateItem(item.id, item.name, item.description)
-                          }
-                        >
-                          <IonIcon icon={checkmark} />
-                        </IonButton>
-                      </>
-                    ) : (
-                      <IonLabel className="item-label">
-                        <h2 className="item-title">{item.name}</h2>
-                        <p className="item-description">{item.description}</p>
-                      </IonLabel>
-                    )}
-                    <IonButton
+                          )
+                        }
+                      />
+                      <IconButton
+                        color="success"
+                        onClick={() =>
+                          updateItem(item.id, item.name, item.description)
+                        }
+                      >
+                        <CheckIcon />
+                      </IconButton>
+                    </>
+                  ) : (
+                    <Box>
+                      <Typography variant="h6">{item.name}</Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {item.description}
+                      </Typography>
+                    </Box>
+                  )}
+                  <Box>
+                    <IconButton
                       color="primary"
-                      fill="clear"
                       onClick={() => toggleEdit(item.id)}
                     >
-                      <IonIcon icon={create} />
-                    </IonButton>
-                    <IonButton
-                      color="danger"
-                      fill="clear"
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      color="error"
                       onClick={() => deleteItem(item.id)}
                     >
-                      <IonIcon icon={trash} />
-                    </IonButton>
-                  </IonItem>
-                </IonCardContent>
-              </IonCard>
-            ))}
-          </IonList>
+                      <DeleteIcon />
+                    </IconButton>
+                  </Box>
+                </Box>
+              </CardContent>
+            </Card>
+          ))}
+        </IonList>
 
-          <Box sx={{ height: 330, transform: "translateZ(0px)", flexGrow: 1 }}>
-            <Backdrop open={open} />
-            <SpeedDial
-              ariaLabel="SpeedDial tooltip example"
-              sx={{ position: "absolute", bottom: 16, right: 16 }}
-              icon={<SpeedDialIcon />}
-              onClose={handleClose}
-              onOpen={handleOpen}
-              open={open}
-            >
-              {actions.map((action) => (
-                <SpeedDialAction
-                  key={action.name}
-                  icon={action.icon}
-                  tooltipTitle={action.name}
-                  tooltipOpen
-                  onClick={() => {
-                    handleClose();
-                    if (action.name === "Camera") {
-                      openCamera();
-                    } else if (action.name === "Geolocation") {
-                      getCurrentPosition();
-                    } else if (action.name === "Save") {
-                      addItem();
-                    }
-                  }}
-                />
-              ))}
-            </SpeedDial>
-          </Box>
-        </IonContent>
-      </IonPage>
-    </>
+        {photos.length > 0 && (
+          <Card sx={{ marginTop: 2 }}>
+            <CardContent>
+              <Typography variant="h6">Fotos capturadas:</Typography>
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                {photos.map((photo, index) => (
+                  <img
+                    key={index}
+                    src={photo}
+                    alt={`Captured ${index + 1}`}
+                    style={{ width: 100, height: 100, objectFit: "cover" }}
+                  />
+                ))}
+              </Box>
+            </CardContent>
+          </Card>
+        )}
+
+        {location && (
+          <Card sx={{ marginTop: 2 }}>
+            <CardContent>
+              <Typography variant="h6">Ubicación actual:</Typography>
+              <Typography variant="body2">Latitud: {location.lat}</Typography>
+              <Typography variant="body2">Longitud: {location.lng}</Typography>
+            </CardContent>
+          </Card>
+        )}
+      </IonContent>
+      <Box sx={{ position: "fixed", bottom: 16, right: 16 }}>
+        <ToggleTareas setPhotos={setPhotos} setLocation={setLocation} />
+      </Box>
+    </IonPage>
   );
 };
 
