@@ -19,7 +19,6 @@ import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import Resgitrate from "../registrate/Resgitrate";
 import { Typography } from "@mui/material";
-import pokefondo from "../../assets/pokefondo.jpg";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -64,10 +63,10 @@ const Login: React.FC = () => {
         setRedirectTimer((prev) =>
           prev !== null && prev > 0 ? prev - 1 : null
         );
-      }, 1000);
+      }, 500);
 
       if (redirectTimer === 0) {
-        history.push("/tab1");
+        history.push("/Tab3"); // Redirige a la página de inicio
       }
 
       return () => clearInterval(interval); // Limpia el intervalo al desmontar
@@ -76,12 +75,10 @@ const Login: React.FC = () => {
 
   return (
     <IonPage>
-      {/* Contenedor principal para centrar el contenido */}
       <IonContent className="LoginContent">
         <Box
           sx={{
-            backgroundImage: "url('/pokefondo.jpg')",
-
+            background: "linear-gradient(90deg, #0f0c29, #302b63, #24243e)",
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
@@ -101,15 +98,19 @@ const Login: React.FC = () => {
                 maxWidth: 400,
                 width: "90%",
                 padding: 3,
-                backgroundColor: "rgba(255, 255, 255, 0.8)",
+                backgroundColor: "rgba(81, 47, 168, 0.01)",
                 borderRadius: 4,
-                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.25)",
+                boxShadow: "4px 4px 10px rgba(255, 255, 255, 0.58)",
               }}
               noValidate
               autoComplete="off"
             >
-              {/* Campo de email */}
-              <Typography variant="h5" align="center" textTransform="uppercase">
+              <Typography
+                variant="h5"
+                align="center"
+                textTransform="uppercase"
+                sx={{ color: "white", fontWeight: "bold" }}
+              >
                 Pokelogeate
               </Typography>
 
@@ -129,8 +130,27 @@ const Login: React.FC = () => {
                 helperText={
                   !email && error ? "Por favor ingresa tu correo." : ""
                 }
+                InputProps={{
+                  style: { color: "white" },
+                }}
+                InputLabelProps={{
+                  style: { color: "white" },
+                }}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      borderColor: "white",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "white",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "white",
+                    },
+                  },
+                }}
               />
-              {/* Campo de contraseña */}
+
               <TextField
                 id="password"
                 label="Contraseña"
@@ -147,8 +167,27 @@ const Login: React.FC = () => {
                 helperText={
                   !password && error ? "Por favor ingresa tu contraseña." : ""
                 }
+                InputProps={{
+                  style: { color: "white" },
+                }}
+                InputLabelProps={{
+                  style: { color: "white" },
+                }}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      borderColor: "white",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "white",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "white",
+                    },
+                  },
+                }}
               />
-              {/* Botón de login */}
+
               <Button
                 variant="contained"
                 color="primary"
@@ -158,8 +197,9 @@ const Login: React.FC = () => {
               >
                 Iniciar Sesión
               </Button>
+
               <Resgitrate />
-              {/* Mensaje de error */}
+
               {error && !isLoggedIn && (
                 <Alert severity="error" sx={{ marginTop: 2 }}>
                   {error} <ErrorLogin />
@@ -168,7 +208,6 @@ const Login: React.FC = () => {
             </Box>
           ) : (
             <Box textAlign="center" mt={4}>
-              {/* Mensaje de bienvenida y redirección */}
               <IonText color="success">
                 <h2>Bienvenido, {userName}!</h2>
                 {redirectTimer !== null && (

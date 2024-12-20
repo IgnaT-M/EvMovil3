@@ -72,18 +72,36 @@ const Resgitrate = () => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
+        <Box
+          sx={{
+            ...style,
+            backgroundColor: "rgba(230, 230, 230, 0.95)",
+            borderRadius: 4,
+            boxShadow: "0px 4px 10px rgba(231, 231, 233, 0.77)",
+          }}
+        >
           <Typography
             id="modal-modal-title"
             variant="h5"
             component="h2"
             gutterBottom
+            sx={{ color: "rgba(6, 6, 6, 0.41)", fontWeight: "bold" }}
           >
             Regístrate
           </Typography>
 
           {/* Campos para que los usuarios llenen sus datos */}
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+              backgroundColor: "rgba(255, 255, 255, 0.41)",
+              borderRadius: 4,
+              padding: 3,
+              boxShadow: "0px 4px 10px rgba(57, 34, 210, 0.43)",
+            }}
+          >
             <TextField
               label="Nombre"
               variant="outlined"

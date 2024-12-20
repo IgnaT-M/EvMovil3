@@ -16,6 +16,7 @@ import { atCircle, square, triangle } from "ionicons/icons";
 import Tab1 from "./pages/lista_tareas/ListaDeTareas";
 import Tab2 from "./pages/login/Login";
 import Tab4 from "./components/api/PokeApi";
+import Tab3 from "./pages/home/Home";
 
 /* MUI Imports */
 import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
@@ -40,6 +41,7 @@ import "@ionic/react/css/display.css";
 /* Custom CSS para el fondo */
 import "./theme/variables.css";
 import "./theme/global.css";
+import Home from "./pages/home/Home";
 
 setupIonicReact();
 
@@ -55,9 +57,9 @@ const App: React.FC = () => {
             <Route exact path="/tab2">
               <Tab2 />
             </Route>
-            {/* <Route exact path="/tab3">
+            <Route exact path="/tab3">
               <Tab3 />
-            </Route> */}
+            </Route>
             <Route exact path="/tab4">
               <Tab4 />
             </Route>
@@ -71,6 +73,10 @@ const App: React.FC = () => {
             <IonTabButton tab="tab1" href="/tab1">
               <IonIcon aria-hidden="true" icon={triangle} />
               <IonLabel>Tab 1</IonLabel>
+            </IonTabButton>
+            <IonTabButton tab="tab2" href="/tab2">
+              <IonIcon aria-hidden="true" icon={triangle} />
+              <IonLabel>Tab 2</IonLabel>
             </IonTabButton>
             <IonTabButton tab="tab3" href="/tab3">
               <IonIcon aria-hidden="true" icon={square} />

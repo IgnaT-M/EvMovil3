@@ -34,9 +34,12 @@ const ListaDeTareas: React.FC = () => {
   });
   const [name, setName] = React.useState("");
   const [description, setDescription] = React.useState("");
+
+  // Toggles para cada acción
   const [showSuccessToast, setShowSuccessToast] = React.useState(false);
   const [showErrorToast, setShowErrorToast] = React.useState(false);
   const [showDeleteToast, setShowDeleteToast] = React.useState(false);
+  const [showUpdateToast, setShowUpdateToast] = React.useState(false);
 
   const [photos, setPhotos] = React.useState<string[]>([]);
   const [location, setLocation] = React.useState<{
@@ -55,15 +58,15 @@ const ListaDeTareas: React.FC = () => {
       setItems([...items, newItem]);
       setName("");
       setDescription("");
-      setShowSuccessToast(true);
+      setShowSuccessToast(true); // Mostrar toast al agregar
     } else {
-      setShowErrorToast(true);
+      setShowErrorToast(true); // Mostrar toast de error
     }
   };
 
   const deleteItem = (id: number) => {
     setItems(items.filter((item) => item.id !== id));
-    setShowDeleteToast(true);
+    setShowDeleteToast(true); // Mostrar toast al eliminar
   };
 
   const toggleEdit = (id: number) => {
@@ -87,35 +90,48 @@ const ListaDeTareas: React.FC = () => {
           : item
       )
     );
+    setShowUpdateToast(true); // Mostrar toast al actualizar
   };
 
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Mi Lista</IonTitle>
+          <IonTitle>Agrega tus Tareas</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
+        {/* Toasts */}
         <IonToast
           isOpen={showSuccessToast}
           message="¡Objeto agregado correctamente!"
           duration={2000}
           color="success"
+          onDidDismiss={() => setShowSuccessToast(false)}
         />
         <IonToast
           isOpen={showErrorToast}
           message="Por favor, completa todos los campos."
           duration={2000}
           color="danger"
+          onDidDismiss={() => setShowErrorToast(false)}
         />
         <IonToast
           isOpen={showDeleteToast}
-          message="Objeto eliminado."
+          message="¡Objeto eliminado correctamente!"
           duration={2000}
           color="warning"
+          onDidDismiss={() => setShowDeleteToast(false)}
+        />
+        <IonToast
+          isOpen={showUpdateToast}
+          message="¡Objeto actualizado correctamente!"
+          duration={2000}
+          color="tertiary"
+          onDidDismiss={() => setShowUpdateToast(false)}
         />
 
+        {/* Formulario para agregar */}
         <Card sx={{ marginBottom: 2 }}>
           <CardContent>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
@@ -146,6 +162,7 @@ const ListaDeTareas: React.FC = () => {
           </CardContent>
         </Card>
 
+        {/* Lista de objetos */}
         <IonList>
           {items.map((item) => (
             <Card key={item.id} sx={{ marginY: 1 }}>
@@ -224,6 +241,7 @@ const ListaDeTareas: React.FC = () => {
           ))}
         </IonList>
 
+        {/* Mostrar fotos y ubicación */}
         {photos.length > 0 && (
           <Card sx={{ marginTop: 2 }}>
             <CardContent>
