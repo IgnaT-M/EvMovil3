@@ -1,5 +1,7 @@
 import { Box, Button, Modal, Typography, TextField } from "@mui/material";
 import React, { useState } from "react";
+import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import app from "../../firebaseConfig"; // Archivo donde inicializas Firebase.
 
 const style = {
   position: "absolute" as "absolute",
@@ -8,11 +10,11 @@ const style = {
   transform: "translate(-50%, -50%)",
   width: 400,
   bgcolor: "background.paper",
-  border: "none", // Eliminamos el borde para un diseño más limpio
-  boxShadow: "0px 4px 10px rgba(63, 81, 181, 0.5)", // Sombra color índigo
-  borderRadius: 4, // Bordes redondeados
+  border: "none",
+  boxShadow: "0px 4px 10px rgba(63, 81, 181, 0.5)",
+  borderRadius: 4,
   p: 4,
-  textAlign: "center", // Centrar el texto
+  textAlign: "center",
 };
 
 const Resgitrate = () => {
@@ -26,6 +28,9 @@ const Resgitrate = () => {
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+
+  const [registrationError, setRegistrationError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -50,10 +55,39 @@ const Resgitrate = () => {
     setConfirmPasswordError(value !== password);
   };
 
+  const handleSubmit = async () => {
+    const auth = getAuth(app);
+
+    try {
+      setRegistrationError("");
+      setSuccessMessage("");
+
+      // Crear usuario con Firebase
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      // Actualizar el nombre del usuario
+      await updateProfile(userCredential.user, { displayName: name });
+
+      setSuccessMessage("Usuario registrado con éxito. ¡Bienvenido!");
+      setName("");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+      handleClose();
+    } catch (error: any) {
+      setRegistrationError("Error al registrar usuario. Inténtalo de nuevo.");
+      console.error("Error:", error.message);
+    }
+  };
+
   const buttonStyle = {
     width: "100%",
-    height: "38px", // Altura uniforme para todos los botones
-    textTransform: "uppercase", // Texto en mayúsculas
+    height: "38px",
+    textTransform: "uppercase",
   };
 
   return (
@@ -90,7 +124,6 @@ const Resgitrate = () => {
             Regístrate
           </Typography>
 
-          {/* Campos para que los usuarios llenen sus datos */}
           <Box
             sx={{
               display: "flex",
@@ -167,10 +200,18 @@ const Resgitrate = () => {
               }
             />
 
+            {registrationError && (
+              <Typography color="error">{registrationError}</Typography>
+            )}
+            {successMessage && (
+              <Typography color="primary">{successMessage}</Typography>
+            )}
+
             <Button
               variant="contained"
               color="primary"
               sx={buttonStyle}
+              onClick={handleSubmit}
               disabled={
                 nameError ||
                 emailError ||

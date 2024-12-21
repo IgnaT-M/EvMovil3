@@ -2,23 +2,21 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import {
   IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
   IonContent,
-  IonButton,
   IonText,
 } from "@ionic/react";
 import { useHistory } from "react-router-dom";
-import users from "../users.json";
+import {
+  Box,
+  TextField,
+  Button,
+  Alert,
+  Typography,
+} from "@mui/material";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import Resgitrate from "../registrate/Resgitrate";
 import ErrorLogin from "../../components/imgErrorLogin/ErrorLogin";
 import ImgLoading from "../../components/imgLoading/ImgLoading";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import Alert from "@mui/material/Alert";
-import Resgitrate from "../registrate/Resgitrate";
-import { Typography } from "@mui/material";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -26,50 +24,44 @@ const Login: React.FC = () => {
   const [error, setError] = useState<string>("");
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [redirectTimer, setRedirectTimer] = useState<number | null>(null);
-  const [userName, setUserName] = useState<string>(""); // Estado para almacenar el nombre del usuario
   const history = useHistory();
 
-  // Validación de credenciales
-  const validateCredentials = (email: string, password: string): boolean => {
-    const user = users.find(
-      (u) => u.email === email && u.password === password
-    );
-    if (user) {
-      setUserName(user.name); // Guarda el nombre del usuario si las credenciales son correctas
-      return true;
-    }
-    return false;
-  };
-
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!email || !password) {
       setError("Por favor, complete todos los campos.");
       return;
     }
 
-    if (validateCredentials(email, password)) {
-      setError("");
+    const auth = getAuth();
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
       setIsLoggedIn(true);
-      setRedirectTimer(3); // Inicia el temporizador para redirigir
-    } else {
-      setError("Credenciales inválidas.");
+      setRedirectTimer(3); // Temporizador de redirección
+      setError("");
+    } catch (error) {
+      setError("Credenciales inválidas o error al iniciar sesión.");
     }
   };
 
-  // Redirección con temporizador
+  // Temporizador de redirección
   useEffect(() => {
     if (isLoggedIn && redirectTimer !== null) {
       const interval = setInterval(() => {
         setRedirectTimer((prev) =>
           prev !== null && prev > 0 ? prev - 1 : null
         );
-      }, 500);
+      }, 1000);
 
       if (redirectTimer === 0) {
-        history.push("/Tab3"); // Redirige a la página de inicio
+        history.push("/Tab3");
       }
 
-      return () => clearInterval(interval); // Limpia el intervalo al desmontar
+      return () => clearInterval(interval);
     }
   }, [isLoggedIn, redirectTimer, history]);
 
@@ -79,9 +71,6 @@ const Login: React.FC = () => {
         <Box
           sx={{
             background: "linear-gradient(90deg, #0f0c29, #302b63, #24243e)",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
             height: "100vh",
             display: "flex",
             justifyContent: "center",
@@ -209,7 +198,7 @@ const Login: React.FC = () => {
           ) : (
             <Box textAlign="center" mt={4}>
               <IonText color="success">
-                <h2>Bienvenido, {userName}!</h2>
+                <h2>Bienvenido!</h2>
                 {redirectTimer !== null && (
                   <p>Redirigiendo en {redirectTimer} segundos...</p>
                 )}

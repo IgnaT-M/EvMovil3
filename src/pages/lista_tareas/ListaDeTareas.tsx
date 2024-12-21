@@ -24,52 +24,69 @@ import {
   Edit as EditIcon,
   Check as CheckIcon,
 } from "@mui/icons-material";
+import app from "../../firebaseConfig"; // Import the initialized Firebase app
+import { getDatabase, ref, push, onValue, remove, update } from "firebase/database";
 
 const ListaDeTareas: React.FC = () => {
   const [items, setItems] = React.useState<
-    { id: number; name: string; description: string; isEditing: boolean }[]
-  >(() => {
-    const savedItems = localStorage.getItem("myListItems");
-    return savedItems ? JSON.parse(savedItems) : [];
-  });
+    { id: string; name: string; description: string; isEditing: boolean }[]
+  >([]);
   const [name, setName] = React.useState("");
   const [description, setDescription] = React.useState("");
 
-  // Toggles para cada acción
   const [showSuccessToast, setShowSuccessToast] = React.useState(false);
   const [showErrorToast, setShowErrorToast] = React.useState(false);
   const [showDeleteToast, setShowDeleteToast] = React.useState(false);
   const [showUpdateToast, setShowUpdateToast] = React.useState(false);
 
-  const [photos, setPhotos] = React.useState<string[]>([]);
-  const [location, setLocation] = React.useState<{
-    lat: number;
-    lng: number;
-  } | null>(null);
+    const [photos, setPhotos] = React.useState<string[]>([]);
+    const [location, setLocation] = React.useState<{
+        lat: number;
+        lng: number;
+    } | null>(null);
 
-  const addItem = () => {
-    if (name.trim() && description.trim()) {
-      const newItem = {
-        id: Date.now(),
-        name: name.trim(),
-        description: description.trim(),
-        isEditing: false,
-      };
-      setItems([...items, newItem]);
-      setName("");
-      setDescription("");
-      setShowSuccessToast(true); // Mostrar toast al agregar
-    } else {
-      setShowErrorToast(true); // Mostrar toast de error
-    }
+  const database = getDatabase(app); // Get the database instance
+
+  React.useEffect(() => {
+    const itemsRef = ref(database, "tasks");
+    onValue(itemsRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        const tasks = Object.entries(data).map(([key, value]: any) => ({
+          id: key,
+          ...value,
+        }));
+        setItems(tasks);
+      } else {
+        setItems([]);
+      }
+    });
+  }, []);
+
+   const addItem = async () => {
+     if (name.trim() && description.trim()) {
+       const newItem = {
+         name: name.trim(),
+         description: description.trim(),
+         isEditing: false,
+       };
+       const itemsRef = ref(database, "tasks");
+       await push(itemsRef, newItem); // await the push
+       setName("");
+       setDescription("");
+       setShowSuccessToast(true);
+     } else {
+       setShowErrorToast(true);
+     }
+   };
+
+  const deleteItem = (id: string) => {
+    const itemRef = ref(database, `tasks/${id}`);
+    remove(itemRef);
+    setShowDeleteToast(true);
   };
 
-  const deleteItem = (id: number) => {
-    setItems(items.filter((item) => item.id !== id));
-    setShowDeleteToast(true); // Mostrar toast al eliminar
-  };
-
-  const toggleEdit = (id: number) => {
+  const toggleEdit = (id: string) => {
     setItems(
       items.map((item) =>
         item.id === id ? { ...item, isEditing: !item.isEditing } : item
@@ -77,20 +94,14 @@ const ListaDeTareas: React.FC = () => {
     );
   };
 
-  const updateItem = (id: number, newName: string, newDescription: string) => {
-    setItems(
-      items.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              name: newName,
-              description: newDescription,
-              isEditing: false,
-            }
-          : item
-      )
-    );
-    setShowUpdateToast(true); // Mostrar toast al actualizar
+  const updateItem = (id: string, newName: string, newDescription: string) => {
+    const itemRef = ref(database, `tasks/${id}`);
+    update(itemRef, {
+      name: newName,
+      description: newDescription,
+      isEditing: false,
+    });
+    setShowUpdateToast(true);
   };
 
   return (
@@ -101,7 +112,6 @@ const ListaDeTareas: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        {/* Toasts */}
         <IonToast
           isOpen={showSuccessToast}
           message="¡Objeto agregado correctamente!"
@@ -131,7 +141,6 @@ const ListaDeTareas: React.FC = () => {
           onDidDismiss={() => setShowUpdateToast(false)}
         />
 
-        {/* Formulario para agregar */}
         <Card sx={{ marginBottom: 2 }}>
           <CardContent>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
@@ -162,7 +171,6 @@ const ListaDeTareas: React.FC = () => {
           </CardContent>
         </Card>
 
-        {/* Lista de objetos */}
         <IonList>
           {items.map((item) => (
             <Card key={item.id} sx={{ marginY: 1 }}>
@@ -270,8 +278,8 @@ const ListaDeTareas: React.FC = () => {
           </Card>
         )}
       </IonContent>
-      <Box sx={{ position: "fixed", bottom: 16, right: 16 }}>
-        <ToggleTareas setPhotos={setPhotos} setLocation={setLocation} />
+        <Box sx={{ position: "fixed", bottom: 16, right: 16 }}>
+          <ToggleTareas setPhotos={setPhotos} setLocation={setLocation} />
       </Box>
     </IonPage>
   );
