@@ -6,7 +6,7 @@ const firebaseConfig = {
   projectId: "evamovil3-14cf0",
   storageBucket: "evamovil3-14cf0.appspot.com",
   messagingSenderId: "145201639505",
-  appId: "1:145201639505:web:YOUR_APP_ID",
+  appId: "1:145201639505:web:",
 };
 
 // Inicializa Firebase
